@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="utf-8">
+    <title>Predictions manager</title>
+    <!-- <link rel="icon" href="/public/favicon.ico" /> -->
+    <!--Jquery-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <!--D3-->
+    <script src="https://d3js.org/d3.v6.min.js"></script>
+    <!--D3 WordCloud layout-->
+    <script src="https://cdn.jsdelivr.net/gh/holtzy/D3-graph-gallery@master/LIB/d3.layout.cloud.js"></script>
+    <!--Bootstrap-->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="/src/dataviz.css">
+    <script type="text/javascript" src="/src/dataviz.js"></script>
+    <script tyep="text/javascript" src="/src/dataviz_cv.js"></script>
+    <script tyep="text/javascript" src="/src/dataviz_jobs.js"></script>
+</head>
+
+<body>
+    <div class="container mt-2">
+        <h1>Visualisations</h1><a href="/">Revenir à l'accueil</a>
+        <div class="mt-2">
+            <button class="btn btn-secondary" id="btn_cv">Visualiser un CV précis</button>
+            <button class="btn btn-secondary" id="btn_job">Visualiser les stats par métier prédit</button>
+        </div>
+        <div id="content"></div>
+        <div id="content_cv" hidden>
+            <div class='mt-2 w-50'>
+                <div class="row">
+                    <div class="col-12">
+                        <label id="input_label_id_cv" for="input_id_cv" class="form-label">Id du CV recherché (entre 0 et 0)</label>
+                    </div>
+                    <div class="col-8">
+                        <input type="text" class="form-control" id="input_id_cv">
+                    </div>
+                    <div class="col-4">
+                        <button id="button_id_cv" class="btn btn-secondary align-bottom">Rechercher</button>
+                    </div>
+                </div>
+            </div>
+            <div id="dataviz_cv">
+                <div class="row mt-2">
+                    <div class="col-6 text-center">
+                        <div class="svg-container" id="cv_wc_container"></div>
+                        <!--Afficher ici le nuage de mots-->
+                        <h3 class="svg-cv-title title">Mots les plus importants du CV</h3>
+                    </div>
+                    <div class="col-6 text-center">
+                        <div class="svg-container" id="cv_top_container"></div>
+                        <!--Afficher ici le top 3-->
+                        <h3 class="svg-cv-title title">Top 3 des prédictions</h3>
+                        <div class="mt-2 svg-container" id="cv_gender_container"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="content_jobs " hidden>
+
+        </div>
+    </div>
+</body>
+
+</html>

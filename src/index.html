@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="utf-8">
+    <title>Predictions manager</title>
+    <!-- <link rel="icon" href="/public/favicon.ico" /> -->
+    <!--Jquery-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <!--Bootstrap-->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="/src/index.css">
+    <script type="text/javascript" src="/src/index.js"></script>
+</head>
+
+<body>
+    <div class="container mt-2">
+        <h1 class="my-2">Predictions manager</h1>
+        <div>
+            <button class="btn btn-secondary" id="btn_mon">Obtenir les dernières prédictions</button>
+            <button class="btn btn-secondary" id="btn_viz" onclick="location.href = '/viz';">Visualisation</button>
+        </div>
+        <div id="content" class="mt-2"></div>
+    </div>
+</body>
+
+</html>
