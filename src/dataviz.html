@@ -4,7 +4,6 @@
 <head>
     <meta charset="utf-8">
     <title>Predictions manager</title>
-    <!-- <link rel="icon" href="/public/favicon.ico" /> -->
     <!--Jquery-->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <!--D3-->
@@ -57,8 +56,39 @@
                 </div>
             </div>
         </div>
-        <div id="content_jobs " hidden>
-
+        <div id="content_jobs" hidden>
+            <div class="mt-2 w-50">
+                <div class="row">
+                    <div class="col-12">
+                        <label id="input_label_select_metier" for="input_select_metier" class="form-label">Nom du métier recherché</label>
+                    </div>
+                    <div class="col-8">
+                        <select type="text" class="form-control" value="null" aria-placeholder="Sélectionner un métier" id="input_select_metier">
+                            <option value="null" disabled>Sélectionner un métier</option>
+                        </select>
+                    </div>
+                    <div class="col-4">
+                        <button id="button_select_metier" class="btn btn-secondary align-bottom">Rechercher</button>
+                    </div>
+                </div>
+            </div>
+            <div id="dataviz_jobs">
+                <div class="row mt-2">
+                    <div class="col-6 text-center">
+                        <div class="svg-container" id="job_wc_container"></div>
+                        <!--Afficher ici le nuage de mots-->
+                        <h3 id="job_wc_editable_title" class="svg-job-title title">Mots les plus souvent liés au métier</h3>
+                        <button id="btn_job_man" class="btn btn-secondary btn-switchwc">Hommes uniquement</button>
+                        <button id="btn_job_neu" class="btn btn-secondary btn-switchwc" disabled="true">Mixte</button>
+                        <button id="btn_job_wom" class="btn btn-secondary btn-switchwc">Femmes uniquement</button>
+                    </div>
+                    <div class="col-6 text-center">
+                        <div class="svg-container" id="job_g_pie_container"></div>
+                        <!--Afficher ici le nuage de mots-->
+                        <h3 class="svg-job-title title">Répartition Hommes/Femmes du métier</h3>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </body>

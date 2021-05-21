@@ -1,4 +1,4 @@
-/* TODO Etiene ajouter ici dans la config des variables liées à Aws Et mongo pour tout paramétrer */
+/* TODO Etienne ajouter et servir d3 en local */
 const CONFIG = require('./config.json')
 const mongoService = require('./mongoService');
 const cp = require('child_process');
@@ -74,7 +74,7 @@ app.get('/viz/id_cv/:idcvParam', async(req, res) => {
 });
 
 // Récupère les données mongo pour la liste des métiers 
-app.get('/viz/metiers_list', async(req, res) => {
+app.get('/viz/metiers', async(req, res) => {
     try {
         result = await mongoService.getDataVizJobList();
         res.send(JSON.stringify(result));
@@ -83,11 +83,11 @@ app.get('/viz/metiers_list', async(req, res) => {
     }
 });
 
-// Récupère les données mongo pour TODO def avec vic et gab : 1 metier, tous les metiers ... ?
-app.get('/viz/metiers', async(req, res) => {
+// Récupère les données mongo pour restituer wordclouds genrés et non genrés
+app.get('/viz/metiers/:metierParam', async(req, res) => {
     try {
-        result = await mongoService.getDataVizJobs(); // TODO
-        res.send(result);
+        result = await mongoService.getDataVizJobs(req.params.metierParam);
+        res.send(JSON.stringify(result));
     } catch (e) {
         res.status(500).send('An error occured while extracting data in mongo for the jobs. Please see server logs for more details.');
     }
@@ -96,4 +96,4 @@ app.get('/viz/metiers', async(req, res) => {
 // Lance le serveur
 app.listen(3000, () => {
     console.log('App launched on port 3000.');
-}).setTimeout(6000000); // 100 min de timeout pour laisser le (long) import se terminer
+}).setTimeout(6000000); // 100 min de timeout pour laisser le (long) import se terminer en toutes circonstances

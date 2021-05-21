@@ -1,3 +1,9 @@
 {
-    "mongoDPath": "\"c:\\Program Files\\MongoDB\\Server\\4.4\\bin\\mongod.exe\""
+    "mongoDPath": "\"c:\\Program Files\\MongoDB\\Server\\4.4\\bin\\mongod.exe\"",
+    "mongoDbConnexionUri": "mongodb://127.0.0.1:27017/",
+    "awsS3Region": "us-east-1",
+    "awsS3OutputBucket": "projectbigdata-outputdata",
+    "awsS3PredictPath": "/big_data_project",
+    "awsS3WordCloudPath": "/big_data_project",
+    "awsS3WordCloudGenderPath": "/big_data_project"
 }

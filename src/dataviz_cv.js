@@ -55,8 +55,6 @@ function displayCVStats(dataAsString) {
         }
     });
 
-    console.log(words);
-
     // Définition de la taille minimale et maximale des mots en fonction de leur poids
     let minSize = d3.min(words, d => d.size);
     let maxSize = d3.max(words, d => d.size);

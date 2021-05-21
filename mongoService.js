@@ -1,28 +1,28 @@
+const CONFIG = require('./config.json');
 const { MongoClient } = require("mongodb");
 const AWS = require('aws-sdk');
 const csv = require('csv-parser');
 
 // Constantes connexion mongodb
-const connexionUri = "mongodb://127.0.0.1:27017/"
-const client = new MongoClient(connexionUri);
+const client = new MongoClient(CONFIG.mongoDbConnexionUri);
 
 // Constante connexion bucket S3
 const s3 = new AWS.S3({
-    'region': 'us-east-1'
+    'region': CONFIG.awsS3Region
 });
 
 // Infos bucket S3
-let bucket = "projectbigdata-outputdata";
+let bucket = CONFIG.awsS3OutputBucket;
 var paramsPredict = {
-    Bucket: bucket + "/big_data_project",
+    Bucket: bucket + CONFIG.awsS3PredictPath,
     Key: "predict.csv",
 };
 var paramsWordCloud = {
-    Bucket: bucket + "/big_data_project",
+    Bucket: bucket + CONFIG.awsS3WordCloudPath,
     Key: "cloud_word.csv",
 }
 var paramsWordCloudGender = {
-    Bucket: bucket + "/big_data_project",
+    Bucket: bucket + CONFIG.awsS3WordCloudGenderPath,
     Key: "cloud_word_gender.csv",
 }
 
@@ -239,6 +239,11 @@ async function getDataVizJobList() {
     }
 }
 
+/**
+ * Récupère les wordclouds pour un métier donné
+ * @param {String} job Nom du métier ciblé
+ * @returns {Promise<Object>} Données statistiques sur les métiers
+ */
 async function getDataVizJobs(job) {
     try {
         // Connexion au serveur mongo
@@ -248,13 +253,65 @@ async function getDataVizJobs(job) {
         let collectionW = client.db("projetBigData").collection("wordCloud");
         let collectionWG = client.db("projetBigData").collection("wordCloudGender");
 
-        // TODO query by job 
-        // TODO voir comment gérer le gender
+        // Récupération des données générales et de genre
+        let dataGeneral = await collectionW.findOne({ metier: job });
+        let dataGenders = await collectionWG.find({ metier: job }).toArray();
+
+        // Modélisation de la string wordcloud en Json
+        dataGeneral.words = wordcloudToJson(dataGeneral.words);
+        for (d of dataGenders) {
+            d.words = wordcloudToJson(d.words);
+        }
+
+        // Création de l'objet data final
+        let data = {
+            general: dataGeneral,
+            genders: dataGenders,
+            totalCount: parseInt(dataGenders[0].nb) + parseInt(dataGenders[1].nb)
+        };
+
+        return data;
     } catch (e) {
         console.error("An error occured : ");
         console.error(e);
         throw e;
     }
+}
+
+/**
+ * Transforme la string wordcloud avec des parenthèses en array
+ * @param {String} wordcloudStr 
+ * @returns {Object[]} Le wordcloud formaté
+ */
+function wordcloudToJson(wordcloudStr) {
+    // Transforme les mots dans la string wordcloud en objets
+    let strings = wordcloudStr.split(')');
+    let stringsAsObj = strings
+        .filter(x => {
+            return x != ''
+        })
+        .map(x => {
+            return JSON.parse((x + ')')
+                .replace('(', '{')
+                .replace(')', '}')
+                .replace(',', ':')
+                .replace("'", '"')
+                .replace("'", '"'))
+        });
+
+    // Les formate comme utilisés par le wordcloud d3
+    let wordcloudObj = [];
+    for (let obj of stringsAsObj) {
+        for (let prop in obj) {
+            // Une seule itération car l'objet n'a qu'une seule propriété
+            wordcloudObj.push({
+                text: prop,
+                size: obj[prop]
+            });
+        }
+    }
+
+    return wordcloudObj;
 }
 
 module.exports = {

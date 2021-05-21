@@ -10,29 +10,33 @@ $(document).ready(() => {
         displayCVSearch();
     });
     $('button#btn_job').on('click', (event) => {
-        $('button').each(() => $(this).prop("disabled", true));
-        promptContentDiv("Waiting for the server querying mongo...");
-        $.get("/viz/metiers_list")
-            .done((data) => {
-                $('button').each(() => $(this).prop("disabled", false));
-                promptContentDiv(data);
-            }).fail((err) => {
-                $('button').each(() => $(this).prop("disabled", false));
-                promptContentDiv(err.responseText, true);
-            });
+        displayJobsSearch();
     });
 
-    // Id_CV buttons
+    // Id_CV button
     $('button#button_id_cv').on('click', (event) => {
         if (parseInt($('#input_id_cv').val()) > maxIdCV) {
             promptContentDiv("Aucun CV possédant cet id n'existe en base.", true);
         } else {
             $.get("/viz/id_cv/" + $('#input_id_cv').val())
                 .done((data) => {
-                    $('button').each(() => $(this).prop("disabled", false));
                     displayCVStats(data);
                 }).fail((err) => {
-                    $('button').each(() => $(this).prop("disabled", false));
+                    promptContentDiv(err.responseText, true);
+                });
+        }
+    });
+
+    // Metier button
+    $('button#button_select_metier').on('click', (event) => {
+        if ($('#input_select_metier').val() == null) {
+            promptContentDiv("Aucun métier n'a été sélectionné !", true);
+        } else {
+            $.get("/viz/metiers/" + $('#input_select_metier').val())
+                .done(data => {
+                    displayJobsStats(data);
+                })
+                .fail(err => {
                     promptContentDiv(err.responseText, true);
                 });
         }
@@ -55,7 +59,7 @@ function displayCVSearch() {
     $.get("/viz/id_cv")
         .done((data) => {
             maxIdCV = parseInt(data);
-            $("#input_label_id_cv").text("Id du CV recherché (entre 0 et " + maxIdCV + ")");
+            $("#input_label_id_cv").text(`Id du CV recherché (entre 0 et ${maxIdCV})`);
         }).fail((err) => {
             promptContentDiv(err.responseText, true);
         });
@@ -66,6 +70,22 @@ function displayCVSearch() {
     });
 }
 
-// TODO Etienne
-// Deux fichiers supplémentaires : viz_cv.js et viz_jobs.js
-// Les méthodes de ces fichiers doivent être appelées dans les callbacks ajax de celui-ci
+function displayJobsSearch() {
+    let contentDiv = $('#content');
+    contentDiv.empty();
+    let contentJobsDiv = $('#content_jobs');
+    contentJobsDiv.attr("hidden", false);
+    let contentCVDiv = $('#content_cv');
+    contentCVDiv.attr("hidden", true);
+    $.get("/viz/metiers")
+        .done((data) => {
+            let dataObject = JSON.parse(data);
+            let select = $("#input_select_metier");
+            dataObject.forEach(element => {
+                let option = `<option value='${element.metier}'>${element.metier}</option>`;
+                select.append(option);
+            });
+        }).fail((err) => {
+            promptContentDiv(err.responseText, true);
+        });
+}
