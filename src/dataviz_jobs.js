@@ -1,3 +1,8 @@
+const pcolor = {
+    "M": "rgb(60, 86, 185)",
+    "F": "rgb(227, 119, 194)"
+}
+
 function displayJobsStats(dataAsString) {
     //#region Constantes
     const width = document.getElementById("job_wc_container").offsetWidth * 0.95,
@@ -7,11 +12,7 @@ function displayJobsStats(dataAsString) {
         fillScale = d3.scaleOrdinal(d3.schemeCategory10);
 
     const pmargin = 50,
-        pradius = (Math.min(width, height) / 2) - pmargin,
-        pcolor = {
-            "M": "rgb(60, 86, 185)",
-            "F": "rgb(227, 119, 194)"
-        };
+        pradius = (Math.min(width, height) / 2) - pmargin;
     //#endregion
 
     //#region Useful methods
@@ -30,11 +31,12 @@ function displayJobsStats(dataAsString) {
             default:
                 wor = job_data.general.words;
         }
-
-        drawWordCloud(wor);
+        let worWithoutSizAdj = [];
+        wor.forEach(x => { worWithoutSizAdj.push({ size: x.size, text: x.text }) });
+        drawWordCloud(wor, worWithoutSizAdj);
     }
 
-    function drawWordCloud(words) {
+    function drawWordCloud(words, wordsWithoutSizeAdjust) {
         $('#job_wc_container').empty();
 
         // Définition de la taille minimale et maximale des mots en fonction de leur poids
@@ -55,15 +57,13 @@ function displayJobsStats(dataAsString) {
             .spiral("rectangular")
             //.font(fontFamily)
             .fontSize(d => fontScale(d.size))
-            .on("end", e => draw(words)) // Appel a la fonction permettant de dessiner le nuage svg
+            .on("end", e => draw(words, wordsWithoutSizeAdjust)) // Appel a la fonction permettant de dessiner le nuage svg
             .start();
-
-        // TODO Etienne ajouter le tootlip au survol
         //#endregion
 
     }
 
-    function draw(w) {
+    function draw(w, wwsa) {
         d3.select("#job_wc_container").append("svg") // Ajout d'un élément SVG sur un DIV existant de la page
             .attr("id", "svgNuage")
             .attr("class", "svg")
@@ -80,9 +80,10 @@ function displayJobsStats(dataAsString) {
             .style("fill", d => fillScale(d.size))
             .attr("text-anchor", "middle")
             .attr("transform", d => "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")")
-            .text(d => d.text);
-        //.on("mouseover", wordMouseOver)
-        //.on("mouseout", wordMouseOut);
+            .attr("value", d => wwsa.filter(x => x.text == d.text)[0].size)
+            .text(d => d.text)
+            .on("mouseover", (d, i) => wordMouseOver(d, i, fillScale))
+            .on("mouseout", wordMouseOut);
     }
     //#endregion
 
@@ -94,8 +95,13 @@ function displayJobsStats(dataAsString) {
     let job_data = JSON.parse(dataAsString);
 
     //#region Nuage de mots general
-    let gen_words = job_data.general.words;
-    drawWordCloud(gen_words);
+    let gen_words = [];
+    let gen_words_without = [];
+    job_data.general.words.forEach(x => {
+        gen_words.push({ size: x.size, text: x.text });
+        gen_words_without.push({ size: x.size, text: x.text });
+    })
+    drawWordCloud(gen_words, gen_words_without);
 
     //#region Pie Chart gender
     let pData = [];
@@ -130,9 +136,8 @@ function displayJobsStats(dataAsString) {
         .attr("stroke", "#dddddd")
         .style("stroke-width", "1px")
         .style("opacity", 0.8)
-        //.on("mouseover", pieMouseOver)
-        //.on("mouseout", pieMouseOut)
-        // TODO Etienne ajouter les mouseover mouseout
+        .on("mouseover", (d, i) => pieMouseOver(d, i, job_data.totalCount))
+        .on("mouseout", pieMouseOut)
         //#endregion
 
     //#region En cas de nouveau rendu du wordcloud
@@ -155,4 +160,36 @@ function displayJobsStats(dataAsString) {
         }
     });
     //#endregion
+}
+
+function pieMouseOver(d, i, totalCount) {
+    // Style du mot ciblé
+    let selected = d3.select(d.target);
+    selected.style("stroke", "#222222")
+        .style("stroke-width", "1px")
+        .style("cursor", "crosshair")
+        .style("opacity", 0.6)
+
+    // Transition affichage div popup
+    displayDiv.transition()
+        .duration(200)
+        .style("opacity", 1);
+
+    // Ajout contenu à la div popup
+    displayDiv.html((i.data.text == "M" ? "Hommes" : "Femmes") + "<br>" + Math.round((i.data.size / totalCount) * 100) + " % <br>" + i.data.size + " personnnes")
+        .style("background-color", pcolor[i.data.text])
+        .style("left", (d.pageX) + "px")
+        .style("top", (d.pageY) + "px");
+}
+
+function pieMouseOut(d, i) {
+    // Fait disparaitre style cercle hover
+    let selected = d3.select(this);
+    selected.style("stroke", "none")
+        .style("opacity", 1);
+
+    // Fait disparaitre la pop up data
+    displayDiv.transition()
+        .duration(200)
+        .style("opacity", 0);
 }

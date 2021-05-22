@@ -1,3 +1,11 @@
+var displayDiv = null;
+
+$(document).ready(() => {
+    displayDiv = d3.select("body").append("div")
+        .attr("class", "tooltip")
+        .style("opacity", 0);
+})
+
 function displayCVStats(dataAsString) {
     //#region Constantes
     const width = document.getElementById("cv_wc_container").offsetWidth * 0.95,
@@ -6,6 +14,7 @@ function displayCVStats(dataAsString) {
         fontScale = d3.scaleLinear().range([18, 68]),
         fillScale = d3.scaleOrdinal(d3.schemeCategory10),
         words = [],
+        wordsWithoutSizeAdjust = [],
         predicts = [];
     //#endregion
 
@@ -23,13 +32,13 @@ function displayCVStats(dataAsString) {
             .enter()
             .append("text") // Ajout de chaque mot avec ses propriétés
             .style("font-size", d => d.size + "px")
-            //.style("font-family", fontFamily)
             .style("fill", d => fillScale(d.size))
             .attr("text-anchor", "middle")
             .attr("transform", d => "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")")
-            .text(d => d.text);
-        //.on("mouseover", wordMouseOver)
-        //.on("mouseout", wordMouseOut);
+            .attr("value", d => { return wordsWithoutSizeAdjust.filter(x => x.text == d.text)[0].size })
+            .text(d => d.text)
+            .on("mouseover", (d, i) => wordMouseOver(d, i, fillScale))
+            .on("mouseout", wordMouseOut);
     }
     //#endregion
 
@@ -55,6 +64,9 @@ function displayCVStats(dataAsString) {
         }
     });
 
+    // Copie des objets pour ne pas travailler sur les mêmes références et garder la size originelle dans wordsWithoutSizeAdjust
+    words.forEach(x => { wordsWithoutSizeAdjust.push({ size: x.size, text: x.text }) });
+
     // Définition de la taille minimale et maximale des mots en fonction de leur poids
     let minSize = d3.min(words, d => d.size);
     let maxSize = d3.max(words, d => d.size);
@@ -75,8 +87,6 @@ function displayCVStats(dataAsString) {
         .fontSize(d => fontScale(d.size))
         .on("end", draw) // Appel a la fonction permettant de dessiner le nuage svg
         .start();
-
-    // TODO Etienne ajouter le tootlip au survol
     //#endregion
 
     //#region Bar chart top 3
@@ -185,3 +195,38 @@ function displayCVStats(dataAsString) {
     }
     //#endregion
 }
+
+//#region mouseover/mouseout functions for jobs and cvs
+
+function wordMouseOver(d, i, fillScale) {
+    // Style du mot ciblé
+    let selected = d3.select(d.target);
+    selected.style("stroke", "#222222")
+        .style("stroke-width", "1px")
+        .style("cursor", "crosshair")
+        .style("opacity", 0.6)
+
+    // Transition affichage div popup
+    displayDiv.transition()
+        .duration(200)
+        .style("opacity", 1);
+
+    // Ajout contenu à la div popup
+    displayDiv.html(i.text + "<br>" + d.target.getAttribute("value") + " occurences")
+        .style("background-color", fillScale(i.size))
+        .style("left", (d.pageX) + "px")
+        .style("top", (d.pageY) + "px");
+}
+
+function wordMouseOut(d, i) {
+    // Fait disparaitre style cercle hover
+    let selected = d3.select(this);
+    selected.style("stroke", "none")
+        .style("opacity", 1);
+
+    // Fait disparaitre la pop up data
+    displayDiv.transition()
+        .duration(200)
+        .style("opacity", 0);
+}
+//#endregion
