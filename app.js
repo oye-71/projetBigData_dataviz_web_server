@@ -4,17 +4,21 @@ const cp = require('child_process');
 const express = require('express');
 const favicon = require('serve-favicon');
 
-// Lance une instance de mongo en local
-cp.exec(`${CONFIG.mongoDPath}`, (error, stdout, stderr) => {
-    if (error) {
-        console.log(`error: ${error.message}`);
-        return;
-    }
-    if (stderr) {
-        console.log(`stderr: ${stderr}`);
-        return;
-    }
-});
+// Lance une instance de mongo en local si Windows
+if (process.platform == "win32") {
+    cp.exec(`${CONFIG.mongoDPath}`, (error, stdout, stderr) => {
+        if (error) {
+            console.log(`error: ${error.message}`);
+            return;
+        }
+        if (stderr) {
+            console.log(`stderr: ${stderr}`);
+            return;
+        }
+    });
+} else {
+    console.log("You are not running this app on windows. Please launch manually the mongoDB instance.");
+}
 
 // Instancie le middleware express
 const app = express();
