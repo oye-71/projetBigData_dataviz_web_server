@@ -3,24 +3,43 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Predictions manager</title>
+    <title>Predictor CV</title>
     <!-- <link rel="icon" href="/public/favicon.ico" /> -->
     <!--Jquery-->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> -->
+    <script src="/src/dependencies/jquery-3.6.0.min.js"></script>
     <!--Bootstrap-->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous"> -->
+    <link rel="stylesheet" href="/src/dependencies/bootstrap.min.css">
+    <!--Custom-->
     <link rel="stylesheet" href="/src/index.css">
     <script type="text/javascript" src="/src/index.js"></script>
 </head>
 
 <body>
-    <div class="container mt-2">
-        <h1 class="my-2">Predictions manager</h1>
-        <div>
+    <nav class="navbar navbar-light bg-light">
+        <a class="navbar-brand" href="/">
+            <img src="/public/icon.png" width="37" height="37" class="d-inline-block align-top" alt=""> Predictor CV
+        </a>
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+                <a class="nav-link" href="/viz">Visualisations</span></a>
+            </li>
+        </ul>
+    </nav>
+    <div class="container text-center mt-4">
+        <h1>Predictor CV</h1>
+        <p class="mt-4">Bienvenue sur le predictor CV, une application conçue par Victoria VEGAS, Gabrielle FAURIE et Etienne DUMONTET.</p>
+        <p>Le but de ce serveur est d'afficher les données des CV après leur extraction, leur export sur le cloud et leur passage dans l'algorithme de prédiction, qui nous permet de dresser des statistiques sur différents métiers, en plus de prédire le métier
+            le plus probable pour un CV totalement anonymisé. Ce serveur permet aussi d'importer de nouvelles données prédites directement sur la base locale.</p>
+        <p>Pour importer les données, cliquez sur "obtenir les dernières prédictions". Sinon, cliquez sur "visualisation". Bonne utilisation !</p>
+        <div class="mt-4">
             <button class="btn btn-secondary" id="btn_mon">Obtenir les dernières prédictions</button>
             <button class="btn btn-secondary" id="btn_viz" onclick="location.href = '/viz';">Visualisation</button>
         </div>
-        <div id="content" class="mt-2"></div>
+        <div class="mt-4">
+            <code id="content" class="mt-2" style="display: none;"></code>
+        </div>
     </div>
 </body>
 

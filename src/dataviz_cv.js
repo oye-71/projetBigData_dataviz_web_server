@@ -37,7 +37,7 @@ function displayCVStats(dataAsString) {
             .attr("transform", d => "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")")
             .attr("value", d => { return wordsWithoutSizeAdjust.filter(x => x.text == d.text)[0].size })
             .text(d => d.text)
-            .on("mouseover", (d, i) => wordMouseOver(d, i, fillScale))
+            .on("mouseover", (d, i) => wordMouseOver(d, i, fillScale, null))
             .on("mouseout", wordMouseOut);
     }
     //#endregion
@@ -101,7 +101,6 @@ function displayCVStats(dataAsString) {
     predicts.sort((a, b) => {
         return d3.ascending(a.value, b.value);
     });
-    console.log(predicts);
 
     // On laisse plus de marge à gauche pour les labels
     let margin = {
@@ -198,7 +197,7 @@ function displayCVStats(dataAsString) {
 
 //#region mouseover/mouseout functions for jobs and cvs
 
-function wordMouseOver(d, i, fillScale) {
+function wordMouseOver(d, i, fillScale, totalCount) {
     // Style du mot ciblé
     let selected = d3.select(d.target);
     selected.style("stroke", "#222222")
@@ -211,8 +210,11 @@ function wordMouseOver(d, i, fillScale) {
         .duration(200)
         .style("opacity", 1);
 
+    let occ = parseInt(d.target.getAttribute("value"));
     // Ajout contenu à la div popup
-    displayDiv.html(i.text + "<br>" + d.target.getAttribute("value") + " occurences")
+    displayDiv.html(i.text + "<br>" +
+            occ + " occurence" + (occ <= 1 ? "" : "s") +
+            (totalCount == null ? "" : "<br>" + Math.round(((occ / totalCount) + Number.EPSILON) * 100) / 100 + " fois per CV"))
         .style("background-color", fillScale(i.size))
         .style("left", (d.pageX) + "px")
         .style("top", (d.pageY) + "px");

@@ -20,8 +20,12 @@ $(document).ready(() => {
         } else {
             $.get("/viz/id_cv/" + $('#input_id_cv').val())
                 .done((data) => {
+                    $('#dataviz_cv').show();
+                    promptContentDiv();
                     displayCVStats(data);
                 }).fail((err) => {
+                    if (typeof err.responseText == "undefined")
+                        err.responseText = "Une erreur s'est produite : impossible de contacter le serveur.";
                     promptContentDiv(err.responseText, true);
                 });
         }
@@ -34,24 +38,33 @@ $(document).ready(() => {
         } else {
             $.get("/viz/metiers/" + $('#input_select_metier').val())
                 .done(data => {
+                    $("#dataviz_jobs").show();
+                    promptContentDiv();
                     displayJobsStats(data);
                 })
                 .fail(err => {
+                    if (typeof err.responseText == "undefined")
+                        err.responseText = "Une erreur s'est produite : impossible de contacter le serveur.";
                     promptContentDiv(err.responseText, true);
                 });
         }
     })
 });
 
-function promptContentDiv(message, isError = false) {
+function promptContentDiv(message = null, isError = false) {
     let contentDiv = $('#content');
-    contentDiv.empty();
-    contentDiv.append("<p" + (isError ? " style='color:red;'" : "") + ">" + message + "</p>");
+    if (message == null) {
+        contentDiv.hide();
+    } else {
+        contentDiv.empty();
+        contentDiv.show();
+        contentDiv.parent().show();
+        contentDiv.append("<span" + (isError ? " style='color:red;'" : "") + ">" + message + "</span>");
+    }
 }
 
 function displayCVSearch() {
-    let contentDiv = $('#content');
-    contentDiv.empty();
+    promptContentDiv();
     let contentJobsDiv = $('#content_jobs');
     contentJobsDiv.attr("hidden", true);
     let contentCVDiv = $('#content_cv');
@@ -61,6 +74,8 @@ function displayCVSearch() {
             maxIdCV = parseInt(data);
             $("#input_label_id_cv").text(`Id du CV recherché (entre 0 et ${maxIdCV})`);
         }).fail((err) => {
+            if (typeof err.responseText == "undefined")
+                err.responseText = "Une erreur s'est produite : impossible de contacter le serveur.";
             promptContentDiv(err.responseText, true);
         });
 
@@ -71,21 +86,26 @@ function displayCVSearch() {
 }
 
 function displayJobsSearch() {
-    let contentDiv = $('#content');
-    contentDiv.empty();
+    promptContentDiv();
     let contentJobsDiv = $('#content_jobs');
     contentJobsDiv.attr("hidden", false);
     let contentCVDiv = $('#content_cv');
     contentCVDiv.attr("hidden", true);
-    $.get("/viz/metiers")
-        .done((data) => {
-            let dataObject = JSON.parse(data);
-            let select = $("#input_select_metier");
-            dataObject.forEach(element => {
-                let option = `<option value='${element.metier}'>${element.metier}</option>`;
-                select.append(option);
+    let select = $("#input_select_metier");
+    if (select.children('option').length <= 1) {
+        promptContentDiv("Chargement de la liste des métiers...");
+        $.get("/viz/metiers")
+            .done((data) => {
+                promptContentDiv();
+                let dataObject = JSON.parse(data);
+                dataObject.forEach(element => {
+                    let option = `<option value='${element.metier}'>${element.metier}</option>`;
+                    select.append(option);
+                });
+            }).fail((err) => {
+                if (typeof err.responseText == "undefined")
+                    err.responseText = "Une erreur s'est produite : impossible de contacter le serveur.";
+                promptContentDiv(err.responseText, true);
             });
-        }).fail((err) => {
-            promptContentDiv(err.responseText, true);
-        });
+    }
 }

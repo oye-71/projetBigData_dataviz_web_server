@@ -33,10 +33,10 @@ function displayJobsStats(dataAsString) {
         }
         let worWithoutSizAdj = [];
         wor.forEach(x => { worWithoutSizAdj.push({ size: x.size, text: x.text }) });
-        drawWordCloud(wor, worWithoutSizAdj);
+        drawWordCloud(wor, worWithoutSizAdj, job_data.totalCount);
     }
 
-    function drawWordCloud(words, wordsWithoutSizeAdjust) {
+    function drawWordCloud(words, wordsWithoutSizeAdjust, totalCount) {
         $('#job_wc_container').empty();
 
         // Définition de la taille minimale et maximale des mots en fonction de leur poids
@@ -57,13 +57,13 @@ function displayJobsStats(dataAsString) {
             .spiral("rectangular")
             //.font(fontFamily)
             .fontSize(d => fontScale(d.size))
-            .on("end", e => draw(words, wordsWithoutSizeAdjust)) // Appel a la fonction permettant de dessiner le nuage svg
+            .on("end", e => draw(words, wordsWithoutSizeAdjust, totalCount)) // Appel a la fonction permettant de dessiner le nuage svg
             .start();
         //#endregion
 
     }
 
-    function draw(w, wwsa) {
+    function draw(w, wwsa, ttc) {
         d3.select("#job_wc_container").append("svg") // Ajout d'un élément SVG sur un DIV existant de la page
             .attr("id", "svgNuage")
             .attr("class", "svg")
@@ -82,7 +82,7 @@ function displayJobsStats(dataAsString) {
             .attr("transform", d => "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")")
             .attr("value", d => wwsa.filter(x => x.text == d.text)[0].size)
             .text(d => d.text)
-            .on("mouseover", (d, i) => wordMouseOver(d, i, fillScale))
+            .on("mouseover", (d, i) => wordMouseOver(d, i, fillScale, ttc))
             .on("mouseout", wordMouseOut);
     }
     //#endregion
@@ -101,7 +101,7 @@ function displayJobsStats(dataAsString) {
         gen_words.push({ size: x.size, text: x.text });
         gen_words_without.push({ size: x.size, text: x.text });
     })
-    drawWordCloud(gen_words, gen_words_without);
+    drawWordCloud(gen_words, gen_words_without, job_data.totalCount);
 
     //#region Pie Chart gender
     let pData = [];

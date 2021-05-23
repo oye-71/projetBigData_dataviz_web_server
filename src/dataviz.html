@@ -3,44 +3,61 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Predictions manager</title>
+    <title>Predictor CV</title>
     <!--Jquery-->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script> -->
+    <script src="/src/dependencies/jquery-3.6.0.min.js"></script>
     <!--D3-->
-    <script src="https://d3js.org/d3.v6.min.js"></script>
+    <!-- <script src="https://d3js.org/d3.v6.min.js"></script> -->
+    <script src="/src/dependencies/d3.min.js"></script>
     <!--D3 WordCloud layout-->
-    <script src="https://cdn.jsdelivr.net/gh/holtzy/D3-graph-gallery@master/LIB/d3.layout.cloud.js"></script>
+    <!-- <script src="https://cdn.jsdelivr.net/gh/holtzy/D3-graph-gallery@master/LIB/d3.layout.cloud.js"></script> -->
+    <script src="/src/dependencies/d3.layout.cloud.js"></script>
     <!--Bootstrap-->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    <link rel="stylesheet" href="/src/dataviz.css">
+    <!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous"> -->
+    <link rel="stylesheet" href="/src/dependencies/bootstrap.min.css">
+    <!--Custom-->
+    <link rel="stylesheet" href="/src/index.css">
     <script type="text/javascript" src="/src/dataviz.js"></script>
     <script tyep="text/javascript" src="/src/dataviz_cv.js"></script>
     <script tyep="text/javascript" src="/src/dataviz_jobs.js"></script>
 </head>
 
 <body>
-    <div class="container mt-2">
-        <h1>Visualisations</h1><a href="/">Revenir à l'accueil</a>
+    <nav class="navbar navbar-light bg-light">
+        <a class="navbar-brand" href="/">
+            <img src="/public/icon.png" width="37" height="37" class="d-inline-block align-top" alt=""> Predictor CV
+        </a>
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+                <a class="nav-link" href="/viz">Visualisations</span></a>
+            </li>
+        </ul>
+    </nav>
+    <div class="container text-center mt-4">
+        <h1>Visualisations</h1>
         <div class="mt-2">
             <button class="btn btn-secondary" id="btn_cv">Visualiser un CV précis</button>
             <button class="btn btn-secondary" id="btn_job">Visualiser les stats par métier prédit</button>
         </div>
-        <div id="content"></div>
+        <div class="mt-3 mb-3" style="display:none;"><code id="content" style="display:none;"></code></div>
         <div id="content_cv" hidden>
-            <div class='mt-2 w-50'>
+            <div class='mt-4'>
                 <div class="row">
                     <div class="col-12">
                         <label id="input_label_id_cv" for="input_id_cv" class="form-label">Id du CV recherché (entre 0 et 0)</label>
                     </div>
-                    <div class="col-8">
+                    <div class="col-3"></div>
+                    <div class="col-5">
                         <input type="text" class="form-control" id="input_id_cv">
                     </div>
-                    <div class="col-4">
+                    <div class="col-1">
                         <button id="button_id_cv" class="btn btn-secondary align-bottom">Rechercher</button>
                     </div>
+                    <div class="col-3"></div>
                 </div>
             </div>
-            <div id="dataviz_cv">
+            <div id="dataviz_cv" style="display: none;">
                 <div class="row mt-2">
                     <div class="col-6 text-center">
                         <div class="svg-container" id="cv_wc_container"></div>
@@ -51,28 +68,30 @@
                         <div class="svg-container" id="cv_top_container"></div>
                         <!--Afficher ici le top 3-->
                         <h3 class="svg-cv-title title">Top 3 des prédictions</h3>
-                        <div class="mt-2 svg-container" id="cv_gender_container"></div>
+                        <div class="mt-4 svg-container" id="cv_gender_container"></div>
                     </div>
                 </div>
             </div>
         </div>
         <div id="content_jobs" hidden>
-            <div class="mt-2 w-50">
+            <div class="mt-4">
                 <div class="row">
                     <div class="col-12">
                         <label id="input_label_select_metier" for="input_select_metier" class="form-label">Nom du métier recherché</label>
                     </div>
-                    <div class="col-8">
+                    <div class="col-3"></div>
+                    <div class="col-5">
                         <select type="text" class="form-control" value="0" placeholder="Sélectionner un métier" id="input_select_metier">
                             <option value="0" disabled>Sélectionner un métier</option>
                         </select>
                     </div>
-                    <div class="col-4">
+                    <div class="col-1">
                         <button id="button_select_metier" class="btn btn-secondary align-bottom">Rechercher</button>
                     </div>
+                    <div class="col-3"></div>
                 </div>
             </div>
-            <div id="dataviz_jobs">
+            <div id="dataviz_jobs" style="display: none;">
                 <div class="row mt-2">
                     <div class="col-6 text-center">
                         <div class="svg-container" id="job_wc_container"></div>

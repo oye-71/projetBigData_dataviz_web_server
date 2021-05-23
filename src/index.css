@@ -1,0 +1,73 @@
+/* GENERAL */
+
+button.btn-secondary {
+    color: #fff;
+    background-color: rgb(255, 150, 134);
+    border-color: rgb(255, 150, 134);
+}
+
+button.btn-secondary:hover {
+    background-color: rgb(89, 123, 179);
+    border-color: rgb(89, 123, 179);
+}
+
+.navbar-light .navbar-brand {
+    font-size: 1.5rem;
+    color: white;
+}
+
+.navbar-light .nav-link {
+    margin-left: 30px;
+    font-size: 1.125rem;
+    color: white !important;
+}
+
+.navbar-light .navbar-brand:hover {
+    color: rgb(255, 150, 134);
+}
+
+.navbar-light .nav-link:hover {
+    color: rgb(255, 150, 134) !important;
+}
+
+.bg-light {
+    background-color: rgb(89, 123, 179) !important;
+}
+
+.svg-container {
+    margin-right: 5px;
+    display: inline-block;
+    width: 400px;
+}
+
+code {
+    border-radius: 5px;
+    padding: 5px 10px;
+    background-color: #EEEEEE;
+    border: 1px solid silver;
+    color: black;
+}
+
+
+/* DATA VIZ */
+
+h3.title {
+    font-size: 1.25rem;
+    color: grey;
+    font-weight: 500;
+}
+
+div.tooltip {
+    position: absolute;
+    text-align: center;
+    width: 130px;
+    padding: 10px;
+    font-size: 0.9em;
+    background: #6c757d;
+    border: 1px solid #6c757d;
+    border-radius: 5px;
+    pointer-events: none;
+    top: 10px;
+    left: 10px;
+    color: #FFFFFF;
+}

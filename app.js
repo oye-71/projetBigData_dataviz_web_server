@@ -1,4 +1,3 @@
-/* TODO Etienne ajouter et servir d3 en local */
 const CONFIG = require('./config.json')
 const mongoService = require('./mongoService');
 const cp = require('child_process');
@@ -19,9 +18,10 @@ cp.exec(`${CONFIG.mongoDPath}`, (error, stdout, stderr) => {
 
 // Instancie le middleware express
 const app = express();
-// Importe tous les fichiers statiques situés sur /src
+// Importe tous les fichiers statiques situés sur /src et sur /public
 app.use('/src', express.static(__dirname + '/src'));
-// // Définit la favicon de toutes les pages servies
+app.use('/public', express.static(__dirname + '/public'));
+// Définit la favicon de toutes les pages servies
 app.use(favicon(__dirname + '/public/favicon.ico'));
 
 // Affiche la page html de base
@@ -40,7 +40,7 @@ app.get('/mongo', async(req, res) => {
         res.send(result);
     } catch (e) {
         console.error(e);
-        res.status(500).send('An error occured while retrieving data from s3 to mongo. Please see server logs for more details.');
+        res.status(500).send('Une erreur est survenue lors de l\'import des données de AWS à mongo. Pour plus de détails, vérifier les logs du serveur.');
     }
 });
 
@@ -59,7 +59,7 @@ app.get('/viz/id_cv', async(req, res) => {
         result = await mongoService.getDataVizCVMaxId();
         res.send(JSON.stringify(result));
     } catch (e) {
-        res.status(500).send('An error occured while getting max CV id on mongo. Please see server logs for more details.');
+        res.status(500).send('Une erreur est survenue lors de l\'extraction de l\'id_cv maximum sur mongo. Pour plus de détails, vérifier les logs du serveur.');
     }
 });
 
@@ -69,7 +69,7 @@ app.get('/viz/id_cv/:idcvParam', async(req, res) => {
         result = await mongoService.getDataVizCV(parseInt(req.params.idcvParam));
         res.send(JSON.stringify(result));
     } catch (e) {
-        res.status(500).send('An error occured while extracting data in mongo for a specific CV. Please see server logs for more details.');
+        res.status(500).send('Une erreur est survenue lors de l\'extraction des données pour un CV donné. Pour plus de détails, vérifier les logs du serveur.');
     }
 });
 
@@ -79,7 +79,7 @@ app.get('/viz/metiers', async(req, res) => {
         result = await mongoService.getDataVizJobList();
         res.send(JSON.stringify(result));
     } catch (e) {
-        res.status(500).send('An error occured while extracting data in mongo for the jobs list. Please see server logs for more details.');
+        res.status(500).send('Une erreur est survenue lors de l\'extraction de la liste des métiers sur mongo. Pour plus de détails, vérifier les logs du serveur.');
     }
 });
 
@@ -89,7 +89,7 @@ app.get('/viz/metiers/:metierParam', async(req, res) => {
         result = await mongoService.getDataVizJobs(req.params.metierParam);
         res.send(JSON.stringify(result));
     } catch (e) {
-        res.status(500).send('An error occured while extracting data in mongo for the jobs. Please see server logs for more details.');
+        res.status(500).send('Une erreur est survenue lors de l\'extraction des données pour un métier sur mongo. Pour plus de détails, vérifier les logs du serveur.');
     }
 });
 
