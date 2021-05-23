@@ -48,10 +48,10 @@
                         <label id="input_label_id_cv" for="input_id_cv" class="form-label">Id du CV recherché (entre 0 et 0)</label>
                     </div>
                     <div class="col-3"></div>
-                    <div class="col-5">
+                    <div class="col-xs-12 col-md-5">
                         <input type="text" class="form-control" id="input_id_cv">
                     </div>
-                    <div class="col-1">
+                    <div class="col-xs-12 col-md-1">
                         <button id="button_id_cv" class="btn btn-secondary align-bottom">Rechercher</button>
                     </div>
                     <div class="col-3"></div>
@@ -59,12 +59,12 @@
             </div>
             <div id="dataviz_cv" style="display: none;">
                 <div class="row mt-2">
-                    <div class="col-6 text-center">
+                    <div class="col-xs-12 col-md-6 text-center">
                         <div class="svg-container" id="cv_wc_container"></div>
                         <!--Afficher ici le nuage de mots-->
                         <h3 class="svg-cv-title title">Mots les plus importants du CV</h3>
                     </div>
-                    <div class="col-6 text-center">
+                    <div class="col-xs-12 col-md-6 text-center">
                         <div class="svg-container" id="cv_top_container"></div>
                         <!--Afficher ici le top 3-->
                         <h3 class="svg-cv-title title">Top 3 des prédictions</h3>
@@ -80,12 +80,12 @@
                         <label id="input_label_select_metier" for="input_select_metier" class="form-label">Nom du métier recherché</label>
                     </div>
                     <div class="col-3"></div>
-                    <div class="col-5">
+                    <div class="col-xs-12 col-md-5">
                         <select type="text" class="form-control" value="0" placeholder="Sélectionner un métier" id="input_select_metier">
                             <option value="0" disabled>Sélectionner un métier</option>
                         </select>
                     </div>
-                    <div class="col-1">
+                    <div class="col-xs-12 col-md-1">
                         <button id="button_select_metier" class="btn btn-secondary align-bottom">Rechercher</button>
                     </div>
                     <div class="col-3"></div>
@@ -93,7 +93,7 @@
             </div>
             <div id="dataviz_jobs" style="display: none;">
                 <div class="row mt-2">
-                    <div class="col-6 text-center">
+                    <div class="col-xs-12 col-md-6 text-center">
                         <div class="svg-container" id="job_wc_container"></div>
                         <!--Afficher ici le nuage de mots-->
                         <h3 id="job_wc_editable_title" class="svg-job-title title">Mots les plus souvent liés au métier</h3>
@@ -101,7 +101,7 @@
                         <button id="btn_job_neu" class="btn btn-secondary btn-switchwc" disabled="true">Mixte</button>
                         <button id="btn_job_wom" class="btn btn-secondary btn-switchwc">Femmes uniquement</button>
                     </div>
-                    <div class="col-6 text-center">
+                    <div class="col-xs-12 col-md-6 text-center">
                         <div class="svg-container" id="job_g_pie_container"></div>
                         <!--Afficher ici le nuage de mots-->
                         <h3 class="svg-job-title title">Répartition Hommes/Femmes du métier</h3>
